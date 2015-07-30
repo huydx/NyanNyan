@@ -3,6 +3,7 @@
 #include <thrift/server/TSimpleServer.h>
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
+#include <thread>
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -13,6 +14,9 @@ using boost::shared_ptr;
 
 using namespace  ::nyan;
 
+int server_counter = 0;
+int frame_counter = 0;
+
 class NyanSyncHandler : virtual public NyanSyncIf {
  public:
   NyanSyncHandler() {
@@ -20,15 +24,25 @@ class NyanSyncHandler : virtual public NyanSyncIf {
   }
 
   void sync(SyncPacket& _return) {
-    // Your implementation goes here
-    _return.server = 0;
-    _return.frame = 10;
+    _return.server = server_counter;
+    _return.frame = frame_counter;
+    printf("%d\n", server_counter);
+    printf("%d\n", frame_counter);
     printf("sync\n");
   }
 
 };
 
-int main(int argc, char **argv) {
+int counterThread() {
+  while (1) {
+    server_counter++;
+    frame_counter++;
+    sleep(1);
+  }
+  return 0;
+}
+
+int serverThread() {
   int port = 9090;
   shared_ptr<NyanSyncHandler> handler(new NyanSyncHandler());
   shared_ptr<TProcessor> processor(new NyanSyncProcessor(handler));
@@ -38,6 +52,19 @@ int main(int argc, char **argv) {
 
   TSimpleServer server(processor, serverTransport, transportFactory, protocolFactory);
   server.serve();
+  return 0;
+}
+
+int main(int argc, char **argv) {
+  //make a thread to count server + frame
+  std::thread cnt(counterThread);    
+
+  //make a thread to start server
+  std::thread svr(serverThread);
+  
+  cnt.join();
+  svr.join();
+
   return 0;
 }
 
