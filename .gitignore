@@ -3,6 +3,8 @@
 *.lo
 *.o
 *.obj
+nyan_client
+nyan_server
 
 # Precompiled Headers
 *.gch

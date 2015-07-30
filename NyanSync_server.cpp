@@ -21,6 +21,8 @@ class NyanSyncHandler : virtual public NyanSyncIf {
 
   void sync(SyncPacket& _return) {
     // Your implementation goes here
+    _return.server = 0;
+    _return.frame = 10;
     printf("sync\n");
   }
 
