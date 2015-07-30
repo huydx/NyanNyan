@@ -58,8 +58,9 @@ int counterThread() {
   return 0;
 }
 
-int serverThread() {
-  int port = 9090;
+int serverThread(int port) {
+  printf("creating server with port: %d", port);
+
   shared_ptr<NyanSyncHandler> handler(new NyanSyncHandler());
   shared_ptr<TProcessor> processor(new NyanSyncProcessor(handler));
   shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
@@ -73,10 +74,16 @@ int serverThread() {
 
 int main(int argc, char **argv) {
   std::thread cnt(counterThread);    
-  std::thread svr(serverThread);
-  
+
+  std::thread svr1(serverThread, 9090);
+  std::thread svr2(serverThread, 9091);
+  std::thread svr3(serverThread, 9092);
+
+  svr1.join();
+  svr2.join();
+  svr3.join();
+
   cnt.join();
-  svr.join();
 
   return 0;
 }

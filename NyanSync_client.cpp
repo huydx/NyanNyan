@@ -18,8 +18,8 @@ int drawFrame = 0;
 
 std::ofstream myfile;
 
-int clientThread(char* server) {
-  boost::shared_ptr<TSocket> socket(new TSocket(server, 9090));
+int clientThread(char* server, int port) {
+  boost::shared_ptr<TSocket> socket(new TSocket(server, port));
   boost::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
   boost::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
   SyncPacket packet;
@@ -53,15 +53,15 @@ int drawThread() {
 int main(int argc, char **argv) {
   //check clientId
   if (argc < 3) {
-    printf("need clientId to work\n");
+    printf("need clientId/serverHost/serverPort to work\n");
     return 1;
   }
 
   clientId = atoi(argv[1]);
   char* serverHost = argv[2];
-  myfile.open ("log.o");
+  char* serverPort = argv[3];
 
-  std::thread clt(clientThread, serverHost);
+  std::thread clt(clientThread, serverHost, atoi(serverPort));
   std::thread drw(drawThread);
 
   clt.join();
