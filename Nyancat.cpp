@@ -32,6 +32,8 @@
  * Pop Tart Cat animation frames
  */
 
+const int FRAMESPEED = 200000;
+
 const char * frame00[] = {
 ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.,,,,,,,,,,,,,,,,,,,,,,,,,",
 ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.,.,,,,,,,,,,,,,,,,,,,,,,,,",
@@ -1956,12 +1958,13 @@ int run_nyan(int frame) {
 	time(&start);
 
 	int playing = 1;    /* Animation should continue [left here for modifications] */
-	size_t i = 0;       /* Current frame # */
+	size_t i = frame;       /* Current frame # */
 	unsigned int f = 0; /* Total frames passed */
 	char last = 0;      /* Last color index rendered */
 	int y, x;        /* x/y coordinates of what we're drawing */
 
-	while (playing) {
+  //drawing
+	{
 		/* Reset cursor */
 		if (clear_screen) {
 			printf("\033[H");
@@ -2023,8 +2026,6 @@ int run_nyan(int frame) {
 			/* Loop animation */
 			i = 0;
 		}
-		/* Wait */
-		usleep(90000);
 	}
 	return 0;
 }

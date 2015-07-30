@@ -4,6 +4,7 @@
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <thread>
+#include "Nyancat.cpp"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -14,7 +15,7 @@ using boost::shared_ptr;
 
 using namespace  ::nyan;
 
-const int FIX_FRAME = 20;
+const int FIX_FRAME = 22;
 
 int server_counter = 0;
 int frame_counter = 0;
@@ -52,7 +53,7 @@ int counterThread() {
       frame_counter = 0;
     }
 
-    sleep(1);
+    usleep(FRAMESPEED);
   }
   return 0;
 }
