@@ -14,8 +14,11 @@ using boost::shared_ptr;
 
 using namespace  ::nyan;
 
+const int FIX_FRAME = 20;
+
 int server_counter = 0;
 int frame_counter = 0;
+int initialized = 0;
 
 class NyanSyncHandler : virtual public NyanSyncIf {
  public:
@@ -24,6 +27,14 @@ class NyanSyncHandler : virtual public NyanSyncIf {
   }
 
   void sync(SyncPacket& _return) {
+    if (initialized == 0) {
+      //init counter
+      server_counter = 1;
+      frame_counter = 0;
+
+      initialized = 1;  
+    }
+
     _return.server = server_counter;
     _return.frame = frame_counter;
     printf("%d\n", server_counter);
@@ -35,8 +46,12 @@ class NyanSyncHandler : virtual public NyanSyncIf {
 
 int counterThread() {
   while (1) {
-    server_counter++;
     frame_counter++;
+    if (frame_counter > FIX_FRAME) {
+      server_counter++;
+      frame_counter = 0;
+    }
+
     sleep(1);
   }
   return 0;
@@ -56,10 +71,7 @@ int serverThread() {
 }
 
 int main(int argc, char **argv) {
-  //make a thread to count server + frame
   std::thread cnt(counterThread);    
-
-  //make a thread to start server
   std::thread svr(serverThread);
   
   cnt.join();

@@ -5,7 +5,6 @@
  *
  ****/
 
-#define _XOPEN_SOURCE 500
 #define _DARWIN_C_SOURCE 1
 #define __BSD_VISIBLE 1
 #include <ctype.h>
@@ -1743,20 +1742,12 @@ void SIGWINCH_handler(int sig) {
 	signal(SIGWINCH, SIGWINCH_handler);
 }
 
-int run_nyan(int argc, char ** argv) {
+int run_nyan(int frame) {
   
 	/* The default terminal is ANSI */
 	char term[1024] = {'a','n','s','i', 0};
 	unsigned int k;
 	int ttype;
-
-	/* Whether or not to show the MOTD intro */
-	char show_intro = 0;
-	char skip_intro = 0;
-
-	/* Process arguments */
-	int index, c;
-	
 
 	if (0) {
 	  //previous telnet	
@@ -1961,7 +1952,7 @@ int run_nyan(int argc, char ** argv) {
 	}
 
 	/* Store the start time */
-	time_t start, current;
+	time_t start;
 	time(&start);
 
 	int playing = 1;    /* Animation should continue [left here for modifications] */
