@@ -48,5 +48,4 @@ make
 
 
 #### Result
-![nyannyan](https://cloud.githubusercontent.com/assets/535718/8999404/e0595d94-3774-11e5-9730-27d3449adf26.png)
 ![a723ad09b19f4ec97c4c52f3daa83677](https://cloud.githubusercontent.com/assets/535718/8999543/d6692cc2-3776-11e5-8cc1-c7aab14de4fb.gif)
