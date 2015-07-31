@@ -14,10 +14,10 @@ all: nyan_server nyan_client
 	$(CXX) -Wall -DHAVE_INTTYPES_H -DHAVE_NETINET_IN_H -std=c++0x $(INC) -c $< -o $@ 
 
 nyan_server: NyanSync_server.o $(GEN_OBJ)
-	$(CXX) $^ -o $@ -L/usr/local/lib -lthrift 
+	$(CXX) $^ -o $@ -L/usr/local/lib -lthrift -lthriftnb -levent
 
 nyan_client: NyanSync_client.o $(GEN_OBJ)
-	$(CXX) $^ -o $@ -L/usr/local/lib -lthrift -pthread
+	$(CXX) $^ -o $@ -L/usr/local/lib -lthrift -pthread  -lthriftnb -levent
 
 clean:
 	$(RM) *.o nyan_server nyan_client

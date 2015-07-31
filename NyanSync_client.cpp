@@ -20,7 +20,7 @@ std::ofstream myfile;
 
 int clientThread(char* server, int port) {
   boost::shared_ptr<TSocket> socket(new TSocket(server, port));
-  boost::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+  boost::shared_ptr<TTransport> transport(new TFramedTransport(socket));
   boost::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
   SyncPacket packet;
 

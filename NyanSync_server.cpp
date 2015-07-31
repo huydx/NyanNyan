@@ -1,6 +1,7 @@
 #include "NyanSync.h"
 #include <thrift/protocol/TBinaryProtocol.h>
-#include <thrift/server/TSimpleServer.h>
+#include <thrift/server/TNonblockingServer.h>
+#include <thrift/concurrency/PosixThreadFactory.h>
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <thread>
@@ -8,6 +9,7 @@
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
+using namespace ::apache::thrift::concurrency;
 using namespace ::apache::thrift::transport;
 using namespace ::apache::thrift::server;
 
@@ -63,11 +65,14 @@ int serverThread(int port) {
 
   shared_ptr<NyanSyncHandler> handler(new NyanSyncHandler());
   shared_ptr<TProcessor> processor(new NyanSyncProcessor(handler));
-  shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
-  shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
   shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
 
-  TSimpleServer server(processor, serverTransport, transportFactory, protocolFactory);
+  shared_ptr<ThreadManager> threadManager = ThreadManager::newSimpleThreadManager(15);
+  shared_ptr<PosixThreadFactory> threadFactory = shared_ptr<PosixThreadFactory>(new PosixThreadFactory());
+  threadManager->threadFactory(threadFactory);
+  threadManager->start();
+
+  TNonblockingServer server(processor, protocolFactory, port, threadManager);
   server.serve();
   return 0;
 }
@@ -76,13 +81,8 @@ int main(int argc, char **argv) {
   std::thread cnt(counterThread);    
 
   std::thread svr1(serverThread, 9090);
-  std::thread svr2(serverThread, 9091);
-  std::thread svr3(serverThread, 9092);
 
   svr1.join();
-  svr2.join();
-  svr3.join();
-
   cnt.join();
 
   return 0;
