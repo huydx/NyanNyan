@@ -1,7 +1,7 @@
 # NyanNyan (my personal project to explore thrift)
-Client-server model terminal nyancat, use to display moving nyancat in multiple display, and multiple computers.
-The original art/nyancat display logic is borrowed from @klange in : https://github.com/klange/nyancat
-The program use thrift as protocol to sync between client and server
+- Client-server model terminal nyancat, use to display moving nyancat in multiple display, and multiple computers.
+- The original art/nyancat display logic is borrowed from @klange in : https://github.com/klange/nyancat
+- The program use thrift as protocol to sync between client and server
 
 # Install
 
